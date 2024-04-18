@@ -18,7 +18,7 @@ HabitHive ist eine App, die darauf ausgerichtet ist, Gewohnheiten zu entwickeln 
 - Aktives Lernen: Anki fördert das aktive Lernen durch wiederholtes Abrufen von Informationen mittels digitaler Karteikarten.
 - Adaptives Wiederholungssystem: Die Software verwendet einen algorithmischen Ansatz, um den Zeitpunkt für das erneute Lernen von Karteikarten basierend auf deren Schwierigkeitsgrad und der Leistung des Benutzers anzupassen.
 
-<img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fforums.ankiweb.net%2F&psig=AOvVaw1uYlCgcMniyFW8nvDkRqsT&ust=1713549486667000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMCs_b2rzIUDFQAAAAAdAAAAABAE" width="100" alt="image">
+<img src="https://global.discourse-cdn.com/business7/uploads/anki2/original/1X/8f1279ababc5879d54e4838989f606cfe55af8c7.jpeg" width="100" alt="image">
 
 
 
