@@ -12,7 +12,7 @@ HabitHive ist eine App, die darauf ausgerichtet ist, Gewohnheiten zu entwickeln 
 - Atomic Habits: Small actions lead to big changes.
 - Four Laws of Behavior Change: Cue, craving, response, reward.
 
-![image](https://m.media-amazon.com/images/I/81YkqyaFVEL._AC_UF894,1000_QL80_.jpg)
+<img src="https://m.media-amazon.com/images/I/81YkqyaFVEL._AC_UF894,1000_QL80_.jpg" width="100" alt="image">
 
 ## Autoren:
 Rafaat Choki, David Svoboda
