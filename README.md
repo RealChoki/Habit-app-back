@@ -1,7 +1,7 @@
 # HabitHive!
 
 ## Beschreibung:
-HabitHive ist eine App, die darauf ausgerichtet ist, Gewohnheiten zu entwickeln und schlechte Gewohnheiten abzulegen, ähnlich wie Anki für das Lernen und inspiriert von Atomic Habits. Benutzer können Ziele wie regelmäßiges Training im Fitnessstudio festlegen. Die App fordert sie entsprechend ihrer Leistung heraus, indem sie zunächst moderate Ziele setzt, z. B. dreimal pro Woche ins Fitnessstudio zu gehen. Basierend darauf, wie leicht oder schwer es dem Benutzer fällt, diese Ziele zu erreichen, passt die App die Ziele für die folgenden Wochen an. Sie kann auch helfen, schlechte Gewohnheiten einzuschränken, indem sie den Konsum begrenzt und basierend darauf, wie erfolgreich der Benutzer ist, weiter anpasst. Das ultimative Ziel von Habitify ist es, gute Gewohnheiten aufzubauen und schlechte loszuwerden.
+HabitHive ist eine App, die darauf ausgerichtet ist, Gewohnheiten zu entwickeln und schlechte Gewohnheiten abzulegen, ähnlich wie Anki für das Lernen und inspiriert von Atomic Habits. Benutzer können Ziele wie regelmäßiges Training im Fitnessstudio festlegen. Die App fordert sie entsprechend ihrer Leistung heraus, indem sie zunächst moderate Ziele setzt, z. B. dreimal pro Woche ins Fitnessstudio zu gehen. Basierend darauf, wie leicht oder schwer es dem Benutzer fällt, diese Ziele zu erreichen, passt die App die Ziele für die folgenden Wochen an. Sie kann auch helfen, schlechte Gewohnheiten einzuschränken, indem sie den Konsum begrenzt und basierend darauf, wie erfolgreich der Benutzer ist, weiter anpasst. Das ultimative Ziel von HabitHive! ist es, gute Gewohnheiten aufzubauen und schlechte loszuwerden.
 
 ## Technologien:
 - Entwickelt mit Vue.js, Typescript, HTML und CSS.
