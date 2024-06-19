@@ -7,27 +7,27 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@Controller
+@RestController  // Changed to @RestController
 @AllArgsConstructor
 @RequestMapping("/habits")
 public class HabitController {
 
-	private final HabitService habitService;
+    private final HabitService habitService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Iterable<Habit>> getHabit() {
+    public ResponseEntity<Iterable<Habit>> getHabits() {  // Changed method name to plural for clarity
         return ResponseEntity.ok(habitService.getHabits());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Habit> getHabit(@PathVariable("id") final Long id) {
-        final Optional<Habit> found = habitService.getHabit(id);
-        return found.isPresent() ? ResponseEntity.ok(found.get()) : ResponseEntity.notFound().build();
+        return habitService.getHabit(id)
+                           .map(ResponseEntity::ok)
+                           .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,9 +40,9 @@ public class HabitController {
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Habit> updateHabit(@PathVariable("id") final Long id, @RequestBody Habit body) {
         body.setId(id);
-        final Habit updatedHabit = habitService.editHabit(body);
-        if (updatedHabit == null) return ResponseEntity.notFound().build();
-        else return ResponseEntity.ok(updatedHabit);
+        return Optional.ofNullable(habitService.editHabit(body))
+                       .map(ResponseEntity::ok)
+                       .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(path = "/{id}")
