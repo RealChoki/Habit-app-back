@@ -8,7 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @RestController  // Changed to @RestController
@@ -43,7 +48,7 @@ public class HabitController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Habit> addHabit(@Valid @RequestBody Habit body) {
-        final Habit h = new Habit(body.getLabel(), body.getFrequency(), body.getGoal());
+        final Habit h = new Habit(body.getId(), body.getLabel(), body.getFrequency(), body.getGoal());
         final Habit createdHabit = habitService.addHabit(h);
         return new ResponseEntity<>(createdHabit, HttpStatus.CREATED);
     }

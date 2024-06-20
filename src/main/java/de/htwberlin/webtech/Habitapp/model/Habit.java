@@ -22,7 +22,8 @@ public class Habit {
     private int timesCompleted;
     private int goal;
 
-    public Habit(String label, String frequency, int goal) {
+    public Habit(Long id,String label, String frequency, int goal) {
+        this.id = id;
         this.label = label;
         this.frequency = frequency;
         this.goal = goal;
