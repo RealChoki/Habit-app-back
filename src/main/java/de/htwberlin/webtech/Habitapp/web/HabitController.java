@@ -3,9 +3,7 @@ package de.htwberlin.webtech.Habitapp.web;
 import de.htwberlin.webtech.Habitapp.model.Day;
 import de.htwberlin.webtech.Habitapp.model.Habit;
 import de.htwberlin.webtech.Habitapp.service.HabitService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +18,6 @@ import java.util.Optional;
 public class HabitController {
 
     private final HabitService habitService;
-
-    // @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    // public ResponseEntity<Iterable<Habit>> getHabits() { // Changed method name
-    // to plural for clarity
-    // return ResponseEntity.ok(habitService.getHabits());
-    // }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Day> getDay() {
