@@ -18,9 +18,20 @@ public class HabitController {
 
     private final HabitService habitService;
 
+    // @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    // public ResponseEntity<Iterable<Habit>> getHabits() {  // Changed method name to plural for clarity
+    //     return ResponseEntity.ok(habitService.getHabits());
+    // }
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Iterable<Habit>> getHabits() {  // Changed method name to plural for clarity
-        return ResponseEntity.ok(habitService.getHabits());
+    public ResponseEntity<List<Habit>> getHabits() {
+        // Static data for testing
+        List<Habit> habits = Arrays.asList(
+            new Habit(1L, "Exercise", "daily", 30),
+            new Habit(2L, "Read", "daily", 1),
+            new Habit(3L, "Meditate", "daily", 10)
+        );
+        return ResponseEntity.ok(habits);
     }
 
     @GetMapping("/{id}")
