@@ -13,6 +13,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry
                 .addMapping("/**")
                 .allowedMethods("*")
-                .allowedOrigins("http://localhost:5173", "https://habit-app-front-rxv2.onrender.com");
+                .allowedOrigins("http://localhost:5173", "https://habit-app-back.onrender.com");
     }
 }
