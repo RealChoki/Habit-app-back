@@ -1,5 +1,6 @@
 package de.htwberlin.webtech.Habitapp.web;
 
+import de.htwberlin.webtech.Habitapp.model.Day;
 import de.htwberlin.webtech.Habitapp.model.Habit;
 import de.htwberlin.webtech.Habitapp.service.HabitService;
 import jakarta.validation.Valid;
@@ -8,15 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@RestController  // Changed to @RestController
+@RestController // Changed to @RestController
 @AllArgsConstructor
 @RequestMapping("/habits")
 public class HabitController {
@@ -24,32 +22,55 @@ public class HabitController {
     private final HabitService habitService;
 
     // @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    // public ResponseEntity<Iterable<Habit>> getHabits() {  // Changed method name to plural for clarity
-    //     return ResponseEntity.ok(habitService.getHabits());
+    // public ResponseEntity<Iterable<Habit>> getHabits() { // Changed method name
+    // to plural for clarity
+    // return ResponseEntity.ok(habitService.getHabits());
     // }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Habit>> getHabits() {
+    public ResponseEntity<Day> getDay() {
         // Static data for testing
         List<Habit> habits = Arrays.asList(
-            new Habit(1L, "Exercise", "daily", 30),
-            new Habit(2L, "Read", "daily", 1),
-            new Habit(3L, "Meditate", "daily", 10)
-        );
-        return ResponseEntity.ok(habits);
+                new Habit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", null),
+                new Habit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today",
+                        "increment", 0, 5, null),
+                new Habit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 3,
+                        3, null));
+
+        // Using a date-based id for the day (e.g., 20240620)
+        Day day = new Day(20240620L, habits, false);
+        return ResponseEntity.ok(day);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Habit> getHabit(@PathVariable("id") final Long id) {
         return habitService.getHabit(id)
-                           .map(ResponseEntity::ok)
-                           .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Habit> addHabit(@Valid @RequestBody Habit body) {
-        final Habit h = new Habit(body.getId(), body.getLabel(), body.getFrequency(), body.getGoal());
-        final Habit createdHabit = habitService.addHabit(h);
+        Habit createdHabit;
+
+        // Determine the type of habit and construct accordingly
+        if ("yesno".equals(body.getType())) {
+            createdHabit = new Habit(body.getId(), body.getType(), body.getFrequency(), body.getTitle(),
+                    body.getDescription(), body.getStatus());
+        } else if ("numeric".equals(body.getType())) {
+            createdHabit = new Habit(body.getId(), body.getType(), body.getFrequency(), body.getTitle(),
+                    body.getDescription(), body.getSubtype(), body.getCount(), body.getGoal(), body.getStatus());
+        } else if ("timer".equals(body.getType())) {
+            createdHabit = new Habit(body.getId(), body.getType(), body.getFrequency(), body.getTitle(),
+                    body.getDescription(), body.getDefaultTimer(), body.getTimer(), body.getStatus());
+        } else {
+            // Handle other types or throw an error
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        // Save the habit using the habitService
+        createdHabit = habitService.addHabit(createdHabit);
+
         return new ResponseEntity<>(createdHabit, HttpStatus.CREATED);
     }
 
@@ -57,8 +78,8 @@ public class HabitController {
     public ResponseEntity<Habit> updateHabit(@PathVariable("id") final Long id, @RequestBody Habit body) {
         body.setId(id);
         return Optional.ofNullable(habitService.editHabit(body))
-                       .map(ResponseEntity::ok)
-                       .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(path = "/{id}")

@@ -1,33 +1,74 @@
 package de.htwberlin.webtech.Habitapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
-
-
-
-@Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Habit {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String label;
+    private String type;
     private String frequency;
-    private int timesCompleted;
-    private int goal;
+    private String title;
+    private String description;
+    private Boolean status;
+    private Integer count;
+    private Integer goal;
+    private String subtype;
+    private Integer timer;
+    private Integer defaultTimer;
 
-    public Habit(Long id,String label, String frequency, int goal) {
+    // Constructor for "yesno" type
+    public Habit(Long id, String type, String frequency, String title, String description, Boolean status) {
         this.id = id;
-        this.label = label;
+        this.type = type;
         this.frequency = frequency;
-        this.goal = goal;
-        this.timesCompleted = 0;
+        this.title = title;
+        this.description = description;
+        this.status = status;
     }
 
+    // Constructor for "numeric" type
+    public Habit(Long id, String type, String frequency, String title, String description, String subtype, Integer count, Integer goal, Boolean status) {
+        this.id = id;
+        this.type = type;
+        this.frequency = frequency;
+        this.title = title;
+        this.description = description;
+        this.subtype = subtype;
+        this.count = count;
+        this.goal = goal;
+        this.status = status;
+    }
+
+    // Constructor for "timer" type
+    public Habit(Long id, String type, String frequency, String title, String description, Integer defaultTimer, Integer timer, Boolean status) {
+        this.id = id;
+        this.type = type;
+        this.frequency = frequency;
+        this.title = title;
+        this.description = description;
+        this.defaultTimer = defaultTimer;
+        this.timer = timer;
+        this.status = status;
+    }
+
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public String getFrequency() { return frequency; }
+    public void setFrequency(String frequency) { this.frequency = frequency; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public Boolean getStatus() { return status; }
+    public void setStatus(Boolean status) { this.status = status; }
+    public Integer getCount() { return count; }
+    public void setCount(Integer count) { this.count = count; }
+    public Integer getGoal() { return goal; }
+    public void setGoal(Integer goal) { this.goal = goal; }
+    public String getSubtype() { return subtype; }
+    public void setSubtype(String subtype) { this.subtype = subtype; }
+    public Integer getTimer() { return timer; }
+    public void setTimer(Integer timer) { this.timer = timer; }
+    public Integer getDefaultTimer() { return defaultTimer; }
+    public void setDefaultTimer(Integer defaultTimer) { this.defaultTimer = defaultTimer; }
 }
