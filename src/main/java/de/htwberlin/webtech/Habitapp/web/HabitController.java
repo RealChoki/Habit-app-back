@@ -26,7 +26,7 @@ public class HabitController {
     public ResponseEntity<Day> getDay() {
         // Static data for testing
         List<Object> habits = Arrays.asList(
-            new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", false),
+            new Habit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", false),
             new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today", "increment", 0, 5, false),
             new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 60, 60, false)
         );
