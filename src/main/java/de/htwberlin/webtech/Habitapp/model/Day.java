@@ -17,6 +17,6 @@ public class Day {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; 
-    private List<Habit> habits;
+    private int habits;
     private boolean completed;
 }
