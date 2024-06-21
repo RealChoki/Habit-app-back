@@ -2,6 +2,9 @@ package de.htwberlin.webtech.Habitapp.web;
 
 import de.htwberlin.webtech.Habitapp.model.Day;
 import de.htwberlin.webtech.Habitapp.model.Habit;
+import de.htwberlin.webtech.Habitapp.model.habit_types.NumericHabit;
+import de.htwberlin.webtech.Habitapp.model.habit_types.TimerHabit;
+import de.htwberlin.webtech.Habitapp.model.habit_types.YesNoHabit;
 import de.htwberlin.webtech.Habitapp.service.HabitService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -23,11 +26,10 @@ public class HabitController {
     public ResponseEntity<Day> getDay() {
         // Static data for testing
         List<Habit> habits = Arrays.asList(
-                new Habit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", null),
-                new Habit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today",
-                        "increment", 0, 5, null),
-                new Habit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 3,
-                        3, null));
+            new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", false),
+            new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today", "increment", 0, 5, false),
+            new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 60, 0, false)
+        );
 
         // Using a date-based id for the day (e.g., 20240620)
         Day day = new Day(20240620L, habits, false);
