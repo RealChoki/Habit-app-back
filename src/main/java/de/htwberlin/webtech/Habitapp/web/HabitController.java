@@ -25,10 +25,10 @@ public class HabitController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Day> getDay() {
         // Static data for testing
-        List<Habit> habits = Arrays.asList(
+        List<Object> habits = Arrays.asList(
             new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", false),
             new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today", "increment", 0, 5, false),
-            new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 60, 0, false)
+            new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 60, 60, false)
         );
 
         // Using a date-based id for the day (e.g., 20240620)
