@@ -2,8 +2,6 @@ package de.htwberlin.webtech.Habitapp.web;
 
 import de.htwberlin.webtech.Habitapp.model.Day;
 import de.htwberlin.webtech.Habitapp.model.Habit;
-import de.htwberlin.webtech.Habitapp.model.habit_types.NumericHabit;
-import de.htwberlin.webtech.Habitapp.model.habit_types.TimerHabit;
 import de.htwberlin.webtech.Habitapp.service.HabitService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
