@@ -1,10 +1,8 @@
 package de.htwberlin.webtech.Habitapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,7 +12,7 @@ import lombok.*;
 public class Day {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; 
-    private int habits;
+    private Long id;
+    private List<Habit> habits;
     private boolean completed;
 }
