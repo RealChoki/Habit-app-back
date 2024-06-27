@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "habit_type")
+@DiscriminatorColumn(name = "habit")
 public class Habit {
 
     @Id
