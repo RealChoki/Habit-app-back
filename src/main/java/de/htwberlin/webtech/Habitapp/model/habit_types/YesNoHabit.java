@@ -10,13 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TimerHabit extends Habit{
-    private Integer defaultTimer;
-    private Integer timer; 
-
-    public TimerHabit(Long id, String type, String frequency, String title, String description, Integer defaultTimer, Integer timer, Boolean status) {
+public class YesNoHabit extends Habit {
+    public YesNoHabit(Long id, String type, String frequency, String title, String description, Boolean status) {
         super(id, type, frequency, title, description, status);
-        this.defaultTimer = defaultTimer;
-        this.timer = timer;
     }
 }
