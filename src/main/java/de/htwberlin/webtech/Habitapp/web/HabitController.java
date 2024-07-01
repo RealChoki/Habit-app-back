@@ -21,9 +21,9 @@ public class HabitController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Habit>> getHabits() {
         List<Habit> habits = Arrays.asList(
-            new Habit(1L, "Physical", "daily", "Exercise", "30 minutes of cardio", true),
-            new Habit(2L, "Mental", "daily", "Read", "Read for 1 hour", true),
-            new Habit(3L, "Mental", "daily", "Meditate", "10 minutes of meditation", true)
+            new Habit(1L, "yesno", "daily", "Exercise", "30 minutes of cardio", false),
+            new Habit(2L, "timer", "daily", "Read", "Read for 1 hour", false),
+            new Habit(3L, "numberic", "daily", "Meditate", "10 minutes of meditation", false)
         );
         return ResponseEntity.ok(habits);
     }
