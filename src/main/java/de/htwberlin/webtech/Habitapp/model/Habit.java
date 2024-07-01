@@ -5,25 +5,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import jakarta.persistence.MappedSuperclass;
 
-@MappedSuperclass
-@Entity
-@Setter
-@Getter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Habit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String type;
+    private String name;
     private String frequency;
-    private String title;
-    private String description;
-    private Boolean status;
+    private int duration;
 }
