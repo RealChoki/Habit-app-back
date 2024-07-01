@@ -17,7 +17,9 @@ public class Habit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String type;
     private String frequency;
-    private int duration;
+    private String title;
+    private String description;
+    private Boolean status;
 }
