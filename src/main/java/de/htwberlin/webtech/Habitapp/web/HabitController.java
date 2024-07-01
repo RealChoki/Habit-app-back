@@ -1,6 +1,9 @@
 package de.htwberlin.webtech.Habitapp.web;
 
 import de.htwberlin.webtech.Habitapp.model.Habit;
+import de.htwberlin.webtech.Habitapp.model.habit_types.NumericHabit;
+import de.htwberlin.webtech.Habitapp.model.habit_types.TimerHabit;
+import de.htwberlin.webtech.Habitapp.model.habit_types.YesNoHabit;
 import de.htwberlin.webtech.Habitapp.service.HabitService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -21,9 +24,9 @@ public class HabitController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Habit>> getHabits() {
         List<Habit> habits = Arrays.asList(
-            new Habit(1L, "yesno", "daily", "Exercise", "30 minutes of cardio", false),
-            new Habit(2L, "timer", "daily", "Read", "Read for 1 hour", false),
-            new Habit(3L, "numberic", "daily", "Meditate", "10 minutes of meditation", false)
+            new YesNoHabit(1L, "yesno", "daily", "Exercise", "30 minutes of cardio", false),
+            new TimerHabit(2L, "timer", "daily", "Read", "Read for 1 hour", 60, 60, false),
+            new NumericHabit(3L, "numeric", "daily", "Meditate", "10 minutes of meditation", "meditation", 0, 10, false)
         );
         return ResponseEntity.ok(habits);
     }
