@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@RestController // Changed to @RestController
+@RestController
 @AllArgsConstructor
 @RequestMapping("/habits")
 public class HabitController {
@@ -24,10 +24,12 @@ public class HabitController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Habit>> getHabits() {
         List<Habit> habits = Arrays.asList(
-            new YesNoHabit(1L, "yesno", "daily", "Exercise", "30 minutes of cardio", false),
-            new TimerHabit(2L, "timer", "daily", "Read", "Read for 1 hour", 60, 60, false),
-            new NumericHabit(3L, "numeric", "daily", "Meditate", "10 minutes of meditation", "meditation", 0, 10, false)
-        );
+                new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour",
+                        false),
+                new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water",
+                        "Drink at least 5 glasses of water today", "increment", 0, 5, false),
+                new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today",
+                        3, 3, false));
         return ResponseEntity.ok(habits);
     }
 
