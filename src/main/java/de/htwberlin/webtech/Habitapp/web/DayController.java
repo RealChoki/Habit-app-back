@@ -28,7 +28,6 @@ public class DayController {
 
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<Day> getDayById(@PathVariable String id) {
-        // Here we check if we are requesting the dummy data day
         if (id.equals("2024-06-01")) {
             List<Habit> habits = Arrays.asList(
                     new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour",
