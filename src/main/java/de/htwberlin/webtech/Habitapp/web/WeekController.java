@@ -35,7 +35,10 @@ public class WeekController {
 
         for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
             String dateString = date.format(dateFormatter);
-            Day day = dayRepository.findById(dateString).orElseGet(() -> createDummyDay(dateString));
+            Day day = dayRepository.findById(dateString).orElseGet(() -> {
+                Day newDay = createDummyDay(dateString);
+                return dayRepository.save(newDay);
+            });
             weekData.add(day);
         }
 
@@ -44,10 +47,12 @@ public class WeekController {
 
     private Day createDummyDay(String date) {
         List<Habit> habits = Arrays.asList(
-                new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", false),
-                new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today", "increment", 0, 5, false),
-                new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 3, 3, false)
-        );
+                new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour",
+                        false),
+                new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water",
+                        "Drink at least 5 glasses of water today", "increment", 0, 5, false),
+                new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today",
+                        3, 3, false));
         return new Day(date, habits, false);
     }
 }
