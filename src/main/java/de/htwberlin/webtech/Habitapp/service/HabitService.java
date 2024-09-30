@@ -2,37 +2,36 @@ package de.htwberlin.webtech.Habitapp.service;
 
 import de.htwberlin.webtech.Habitapp.model.Habit;
 import de.htwberlin.webtech.Habitapp.persistence.HabitRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class HabitService {
-    
-    @Autowired
-    private HabitRepository repo;
 
-    public Optional<Habit> getHabit(Long id) {
-        return this.repo.findById(id);
+    private final HabitRepository habitRepository;
+
+    public Habit saveHabit(Habit habit) {
+        return habitRepository.save(habit);
     }
 
-    public Iterable<Habit> getHabits() {
-        return this.repo.findAll();
+    public List<Habit> getAllHabits() {
+        return (List<Habit>) habitRepository.findAll();
     }
 
-    public Habit addHabit(final Habit habit) {
-        return this.repo.save(habit);
+    public Optional<Habit> getHabitById(Long id) {
+        return habitRepository.findById(id);
     }
 
-    public Habit editHabit(final Habit habit) {
-        return repo.existsById(habit.getId()) ? repo.save(habit) : null;
+    public Habit updateHabit(Long id, Habit habit) {
+        habit.setId(id); // Ensure the habit ID is set
+        return habitRepository.save(habit);
     }
 
-    public boolean removeHabit(final Long id){
-        final boolean exists = repo.existsById(id);
-        if (exists) repo.deleteById(id);
-        return exists;
+    public void deleteHabit(Long id) {
+        habitRepository.deleteById(id);
     }
 }
-
