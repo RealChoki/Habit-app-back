@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -18,7 +19,11 @@ import java.util.List;
 public class Day {
     @Id
     private String id;
+    
+    private LocalDate date; // Add this line
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Habit> habits;
+    
     private boolean completed;
 }
