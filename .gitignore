@@ -1,4 +1,6 @@
 enviroment.env
+.env
+databank.env
 HELP.md
 .gradle
 build/
