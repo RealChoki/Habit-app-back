@@ -20,7 +20,7 @@ public class Day {
     @Id
     private String id;
     
-    private LocalDate date; // Add this line
+    private LocalDate date;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Habit> habits;

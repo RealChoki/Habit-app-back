@@ -59,15 +59,15 @@ public class WeekController {
     }
 
     // Create dummy data for missing days
-    private Day createDummyDay(String date) {
-        List<Habit> habits = new ArrayList<>();
-        habits.add(new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour",
-                false));
-        habits.add(new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water",
-                "Drink at least 5 glasses of water today", "increment", 0, 5, false));
-        habits.add(new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano",
-                "Play the piano for at least 1 hour today", 3, 3, false));
+    private Day createDummyDay(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(dateString, formatter);
 
-        return new Day(date, habits, false); // Use the `date` as the `id` for the Day object
+        List<Habit> habits = new ArrayList<>();
+        habits.add(new YesNoHabit(1L, "yesno", "daily", "Go to gym", "Go to the gym and workout for at least 1 hour", false));
+        habits.add(new NumericHabit(2L, "numeric", "daily", "Drink 5 Glasses of Water", "Drink at least 5 glasses of water today", "increment", 0, 5, false));
+        habits.add(new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano", "Play the piano for at least 1 hour today", 3, 3, false));
+
+        return new Day(dateString, date, habits, false); // Use the `dateString` as the `id` for the Day object
     }
 }

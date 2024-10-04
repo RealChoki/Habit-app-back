@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @RestController
@@ -37,7 +38,7 @@ public class DayController {
                     new TimerHabit(3L, "timer", "daily", "Play 1 hour of Piano",
                             "Play the piano for at least 1 hour today",
                             3, 3, false));
-            Day dummyDay = new Day("2024-06-01", habits, false);
+            Day dummyDay = new Day("2024-06-01", LocalDate.of(2024, 6, 1), habits, false);
             return ResponseEntity.ok(dummyDay);
         } else {
             return dayRepository.findById(id)
