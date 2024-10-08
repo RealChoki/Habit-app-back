@@ -2,8 +2,8 @@ require('dotenv').config();
 const fastify = require('fastify')({ logger: true })
 const mongoose = require('mongoose')
 
-const mongoUri = process.env.MONGODB_URI;
-// const mongoUri = 'mongodb://localhost:27017/habit-app'
+// const mongoUri = process.env.MONGODB_URI;
+const mongoUri = 'mongodb://localhost:27017/habit-app'
 
 // MongoDB connection
 mongoose.connect(mongoUri)
