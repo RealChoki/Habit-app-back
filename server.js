@@ -1,8 +1,12 @@
+require('dotenv').config();
 const fastify = require('fastify')({ logger: true })
 const mongoose = require('mongoose')
 
+const mongoUri = process.env.MONGODB_URI;
+// const mongoUri = 'mongodb://localhost:27017/habit-app'
+
 // MongoDB connection
-mongoose.connect('mongodb+srv://rafaatchoki:Raf455221139!@cluster0.o70sv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(mongoUri)
   .then(() => fastify.log.info('MongoDB connected'))
   .catch(err => fastify.log.error(err))
 
