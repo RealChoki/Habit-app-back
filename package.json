@@ -1,0 +1,29 @@
+{
+  "name": "habit-app-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidcraccer/habit-app-back.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davidcraccer/habit-app-back/issues"
+  },
+  "homepage": "https://github.com/davidcraccer/habit-app-back#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "diagnostics_channel": "^1.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "fastify": "^4.28.1",
+    "fastify-plugin": "^5.0.1",
+    "mongoose": "^8.7.0"
+  }
+}
