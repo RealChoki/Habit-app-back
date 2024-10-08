@@ -42,13 +42,24 @@ async function userRoutes(fastify, options) {
   });
 
   // Get a user by ID
-  fastify.get('/users/:id', {
+  fastify.get('/users/id/:id', {
     schema: {
       params: getUserParams
     }
   }, async (request, reply) => {
     try {
       const user = await User.findOne({ id: request.params.id });
+      if (!user) return reply.status(404).send({ message: 'User not found' });
+      return reply.send(user);
+    } catch (error) {
+      return reply.status(500).send({ message: error.message });
+    }
+  });
+
+  fastify.get('/users/username/:username', 
+    async (request, reply) => {
+    try {
+      const user = await User.findOne({ username: request.params.username });
       if (!user) return reply.status(404).send({ message: 'User not found' });
       return reply.send(user);
     } catch (error) {

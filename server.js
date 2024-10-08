@@ -2,12 +2,9 @@ const fastify = require('fastify')({ logger: true })
 const mongoose = require('mongoose')
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/habit-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => fastify.log.info('MongoDB connected'))
-.catch(err => fastify.log.error(err))
+mongoose.connect('mongodb+srv://rafaatchoki:Raf455221139!@cluster0.o70sv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+  .then(() => fastify.log.info('MongoDB connected'))
+  .catch(err => fastify.log.error(err))
 
 // Register your routes here
 const userRoutes = require('./routes/userRoutes')

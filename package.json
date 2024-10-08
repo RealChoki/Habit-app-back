@@ -24,6 +24,7 @@
     "express": "^4.21.0",
     "fastify": "^4.28.1",
     "fastify-plugin": "^5.0.1",
+    "mongodb": "^6.9.0",
     "mongoose": "^8.7.0"
   }
 }
