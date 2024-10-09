@@ -21,7 +21,6 @@ async function userRoutes(fastify, options) {
       try {
         const hashedPassword = await bcrypt.hash(password, 10)
         const newUser = new User({
-          id, // Use your custom id
           name,
           username,
           email,
