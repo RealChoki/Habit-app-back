@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const createUserParams = require('../schemas/createUserParams.json')
 const getUserByIDParams = require('../schemas/getUserByIDParams.json')
 const getUserByUsernameParams = require('../schemas/getUserByUsernameParams.json')
+const updateUserBodySchema = require('../schemas/updateUserBodySchema.json')
 
 async function userRoutes(fastify, options) {
   // Register a new user
