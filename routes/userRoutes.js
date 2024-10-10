@@ -17,7 +17,7 @@ async function userRoutes(fastify, options) {
       }
     },
     async (request, reply) => {
-      const { id, name, username, email, password } = request.body
+      const { name, username, email, password } = request.body
 
       try {
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -46,24 +46,7 @@ async function userRoutes(fastify, options) {
     }
   })
 
-  // Define a helper function to find a user by any field
-  async function findUserByField(field, value, reply) {
-    try {
-      const query = {}
-      query[field] = value
-      const user = await User.findOne(query).lean()
-
-      if (!user) {
-        return reply.status(404).send({ success: false, message: 'User not found' })
-      }
-
-      return reply.send({ success: true, data: user })
-    } catch (error) {
-      return reply.status(500).send({ success: false, message: error.message })
-    }
-  }
-
-  // Get a user by custom ID (your `id` field)
+  // Get a user by MongoDB _id
   fastify.get(
     '/users/id/:id',
     {
@@ -72,7 +55,17 @@ async function userRoutes(fastify, options) {
       }
     },
     async (request, reply) => {
-      return findUserByField('id', request.params.id, reply)
+      try {
+        const user = await User.findById(request.params.id).lean()
+
+        if (!user) {
+          return reply.status(404).send({ success: false, message: 'User not found' })
+        }
+
+        return reply.send({ success: true, data: user })
+      } catch (error) {
+        return reply.status(500).send({ success: false, message: error.message })
+      }
     }
   )
 
@@ -85,11 +78,21 @@ async function userRoutes(fastify, options) {
       }
     },
     async (request, reply) => {
-      return findUserByField('username', request.params.username, reply)
+      try {
+        const user = await User.findOne({ username: request.params.username }).lean()
+
+        if (!user) {
+          return reply.status(404).send({ success: false, message: 'User not found' })
+        }
+
+        return reply.send({ success: true, data: user })
+      } catch (error) {
+        return reply.status(500).send({ success: false, message: error.message })
+      }
     }
   )
 
-  // Update a user (use your custom `id` field)
+  // Update a user by MongoDB _id
   fastify.put(
     '/users/:id',
     {
@@ -100,7 +103,7 @@ async function userRoutes(fastify, options) {
     },
     async (request, reply) => {
       try {
-        const updatedUser = await User.findOneAndUpdate({ id: request.params.id }, request.body, {
+        const updatedUser = await User.findByIdAndUpdate(request.params.id, request.body, {
           new: true,
           lean: true
         })
@@ -116,7 +119,7 @@ async function userRoutes(fastify, options) {
     }
   )
 
-  // Delete a user by custom `id`
+  // Delete a user by MongoDB _id
   fastify.delete(
     '/users/:id',
     {
@@ -126,7 +129,7 @@ async function userRoutes(fastify, options) {
     },
     async (request, reply) => {
       try {
-        const deletedUser = await User.findOneAndDelete({ id: request.params.id })
+        const deletedUser = await User.findByIdAndDelete(request.params.id)
 
         if (!deletedUser) {
           return reply.status(404).send({ success: false, message: 'User not found' })
@@ -138,6 +141,33 @@ async function userRoutes(fastify, options) {
       }
     }
   )
+
+  // Login route
+  fastify.post('/users/login', async (request, reply) => {
+    const { username, password } = request.body
+
+    try {
+      const user = await User.findOne({ username }).lean()
+
+      if (!user) {
+        return reply.status(404).send({ success: false, message: 'User not found' })
+      }
+
+      // const isPasswordValid = await bcrypt.compare(password, user.password)
+
+      // if (!isPasswordValid) {
+      //   return reply.status(401).send({ success: false, message: 'Invalid credentials' })
+      // }
+
+      if (user.password !== password) {
+        return reply.status(401).send({ success: false, message: 'Invalid credentials' });
+      }
+
+      return reply.send({ success: true, message: 'Login successful', user })
+    } catch (error) {
+      return reply.status(500).send({ success: false, message: error.message })
+    }
+  })
 }
 
 module.exports = userRoutes
