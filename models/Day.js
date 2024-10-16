@@ -1,24 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const DaySchema = new mongoose.Schema({
-  metadata: {
-    timestamp: {
-      type: Date,
-      default: Date.now,
-    }
+  timestamp: {
+    type: Date,
+    default: Date.now,
   },
   completed: {
     type: Boolean,
     required: true,
   },
-  tasks: {
+  habits: {
     type: Map,
     of: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Task',
+      ref: "Habits",
     },
     required: true,
-  }
+  },
 });
 
-module.exports = mongoose.model('Day', DaySchema);
+module.exports = mongoose.model("Day", DaySchema);
