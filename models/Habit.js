@@ -1,38 +1,30 @@
-const mongoose = require('mongoose');
+module.exports = mongoose.model('Habit', HabitSchema)
+
+const mongoose = require('mongoose')
 
 const HabitSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: ['yesno', 'numeric', 'timer'],
-    required: true,
+    required: true
   },
   frequency: {
     type: String,
     enum: ['daily', 'weekly', 'monthly'],
-    required: true,
+    required: true
   },
   title: {
     type: String,
-    required: true,
+    required: true
   },
-  description: String,
+  description: {
+    type: String
+  },
   completed: {
     type: Boolean,
-    default: null,
-  },
-  // For numeric habits
-  count: Number,
-  goal: Number,
-  subtype: {
-    type: String,
-    enum: ['increment', 'decrement'],
-  },
-  // For timer habits
-  timer: Number,
-  default: Number,
-  timerInterval: {
-    type: mongoose.Schema.Types.Mixed,
-  },
-});
+    default: null
+  }
+})
 
-module.exports = mongoose.model('Habit', HabitSchema);
+// Export the Habit model
+module.exports = mongoose.model('Habit', HabitSchema)
