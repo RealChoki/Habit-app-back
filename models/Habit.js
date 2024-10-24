@@ -1,5 +1,3 @@
-module.exports = mongoose.model('Habit', HabitSchema)
-
 const mongoose = require('mongoose')
 
 const HabitSchema = new mongoose.Schema({
@@ -26,5 +24,4 @@ const HabitSchema = new mongoose.Schema({
   }
 })
 
-// Export the Habit model
 module.exports = mongoose.model('Habit', HabitSchema)

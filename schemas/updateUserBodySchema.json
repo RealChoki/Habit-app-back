@@ -1,7 +1,6 @@
 {
   "type": "object",
   "properties": {
-    "id": { "type": "string", "minLength": 1 },
     "name": { "type": "string", "minLength": 1 },
     "username": { "type": "string", "minLength": 1 },
     "email": { "type": "string", "format": "email" },

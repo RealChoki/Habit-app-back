@@ -153,14 +153,10 @@ async function userRoutes(fastify, options) {
         return reply.status(404).send({ success: false, message: 'User not found' })
       }
 
-      // const isPasswordValid = await bcrypt.compare(password, user.password)
+      const isPasswordValid = await bcrypt.compare(password, user.password)
 
-      // if (!isPasswordValid) {
-      //   return reply.status(401).send({ success: false, message: 'Invalid credentials' })
-      // }
-
-      if (user.password !== password) {
-        return reply.status(401).send({ success: false, message: 'Invalid credentials' });
+      if (!isPasswordValid) {
+        return reply.status(401).send({ success: false, message: 'Invalid credentials' })
       }
 
       return reply.send({ success: true, message: 'Login successful', user })
