@@ -12,22 +12,16 @@ const DaySchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  dailyHabits: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DailyHabit'
+    }
+  ],
   completed: {
     type: Boolean,
     required: true
-  },
-  habits: [
-    {
-      habitId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Habit'
-      },
-      completed: {
-        type: Boolean,
-        default: null
-      }
-    }
-  ]
+  }
 })
 
 // Ensure the _id is set to the formatted date string (YYYY-MM-DD)

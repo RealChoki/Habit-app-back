@@ -47,3 +47,47 @@ async function userRoutes(fastify, options) {
 }
 
 module.exports = userRoutes
+
+
+Mongo data:
+User
+{
+  "_id": { "$oid": "60d5ec49a7211c12345e6abc" },
+  "username": "test",
+  "email": "test@gmail.com",
+  "password": "test",
+  "habits": [
+    {
+      "habitId": { "$oid": "671e3e1f8616eac34564bc81" }
+    }
+  ]
+}
+
+habit
+{
+        "_id": "671e3e1f8616eac34564bc81",
+        "type": "yesno",
+        "frequency": "daily",
+        "title": "Drink Water",
+        "description": "A habit to drink at least 2 liters of water daily.",
+        "completed": false,
+        "__v": 0
+}
+
+daily habit:
+{
+  "userId": { "$oid": "60d5ec49a7211c12345e6abc" },
+  "habitId": { "$oid": "671e3e1f8616eac34564bc81" },
+  "timestamp": { "$date": "2024-10-27T00:00:00Z" },
+  "completed": false
+}
+
+day:
+{
+  "userId": { "$oid": "60d5ec49a7211c12345e6abc" },
+  "timestamp": { "$date": "2024-10-27T00:00:00Z" },
+  "dailyHabits": [
+    { "$oid": "60d5ec49a7211c12345e6abc" }
+  ],
+  "completed": false
+}

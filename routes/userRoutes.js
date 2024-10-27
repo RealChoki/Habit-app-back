@@ -1,4 +1,6 @@
 const User = require('../models/User')
+const DailyHabit = require('../models/DailyHabit')
+const Habit = require('../models/Habit')
 const bcrypt = require('bcrypt')
 
 // Importing schemas
@@ -129,18 +131,35 @@ async function userRoutes(fastify, options) {
     },
     async (request, reply) => {
       try {
-        const deletedUser = await User.findByIdAndDelete(request.params.id)
-
-        if (!deletedUser) {
-          return reply.status(404).send({ success: false, message: 'User not found' })
+        const userId = request.params.id;
+  
+        // Step 1: Find the user and their habits
+        const user = await User.findById(userId).populate('habits.habitId');
+  
+        if (!user) {
+          return reply.status(404).send({ success: false, message: 'User not found' });
         }
-
-        return reply.send({ success: true, message: 'User deleted' })
+  
+        // Step 2: Collect habit IDs to delete
+        const habitIds = user.habits.map(habit => habit.habitId);
+  
+        // Step 3: Delete Daily Habits associated with these habits
+        await DailyHabit.deleteMany({ habitId: { $in: habitIds } });
+  
+        // Step 4: Delete the Habits themselves
+        await Habit.deleteMany({ _id: { $in: habitIds } });
+  
+        // Step 5: Delete the User
+        const deletedUser = await User.findByIdAndDelete(userId);
+  
+        return reply.send({ success: true, message: 'User and associated habits deleted' });
       } catch (error) {
-        return reply.status(500).send({ success: false, message: error.message })
+        console.error(error);
+        return reply.status(500).send({ success: false, message: error.message });
       }
     }
-  )
+  );
+  
 
   // Login route
   fastify.post('/users/login', async (request, reply) => {
