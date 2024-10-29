@@ -35,13 +35,21 @@ async function dailyHabitsRoutes(fastify, options) {
     }
   })
 
-  // Get all Daily Habits for a user
-  fastify.get('/daily-habits/:userId', async (request, reply) => {
+  // Get Daily Habit via ID
+  fastify.get('/daily-habits/:dailyHabitId', async (request, reply) => {
     try {
-      const dailyHabits = await DailyHabit.find({ userId: request.params.userId })
-      reply.status(200).send(dailyHabits)
+      const dailyHabitId = request.params.dailyHabitId
+
+      const dailyHabit = await DailyHabit.findById(dailyHabitId)
+
+      if (!dailyHabit) {
+        return reply.status(404).send({ message: 'Daily Habit not found' })
+      }
+
+      reply.status(200).send(dailyHabit)
     } catch (error) {
-      reply.status(500).send({ message: 'Error fetching daily habits', error })
+      console.error('Error fetching daily habit:', error)
+      reply.status(500).send({ message: 'Error fetching daily habit', error: error.message })
     }
   })
 
@@ -74,6 +82,26 @@ async function dailyHabitsRoutes(fastify, options) {
     } catch (error) {
       console.error('Error deleting daily habit:', error)
       return reply.status(500).send({ message: 'Error deleting daily habit', error: error.message })
+    }
+  })
+
+  // Fetch multiple Daily Habits by their IDs using GET and query parameters
+  fastify.get('/daily-habits/bulk-fetch', async (request, reply) => {
+    try {
+      const habitIdsParam = request.query.habitIds
+
+      if (!habitIdsParam) {
+        return reply.status(400).send({ message: 'habitIds query parameter is required.' })
+      }
+
+      const habitIdsArray = habitIdsParam.split(',').map((id) => id.trim())
+      console.log('Received habit IDs:', habitIdsArray)
+
+      const dailyHabits = await DailyHabit.find({ _id: { $in: habitIdsArray } })
+      reply.status(200).send(dailyHabits)
+    } catch (error) {
+      console.error('Error fetching daily habits by IDs:', error)
+      reply.status(500).send({ message: 'Error fetching daily habits by IDs', error: error.message })
     }
   })
 }
