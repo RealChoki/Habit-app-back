@@ -86,22 +86,46 @@ async function dailyHabitsRoutes(fastify, options) {
   })
 
   // Fetch multiple Daily Habits by their IDs using GET and query parameters
-  fastify.get('/daily-habits/bulk-fetch', async (request, reply) => {
+  fastify.get('/week/:startDate/:endDate', async (request, reply) => {
+    const { startDate, endDate } = request.params
+    const { userId } = request.query
+
+    if (!userId) {
+      return reply.status(400).send({ message: 'userId query parameter is required.' })
+    }
+
     try {
-      const habitIdsParam = request.query.habitIds
+      const start = new Date(startDate)
+      const end = new Date(endDate)
+      end.setHours(23, 59, 59, 999)
 
-      if (!habitIdsParam) {
-        return reply.status(400).send({ message: 'habitIds query parameter is required.' })
-      }
+      const dailyHabits = await DailyHabit.find({
+        userId: userId,
+        timestamp: { $gte: start, $lte: end }
+      })
+        .populate('habitId')
+        .lean()
 
-      const habitIdsArray = habitIdsParam.split(',').map((id) => id.trim())
-      console.log('Received habit IDs:', habitIdsArray)
+      const response = dailyHabits.map((dailyHabit) => ({
+        dailyHabitId: dailyHabit._id,
+        habitId: dailyHabit.habitId._id,
+        timestamp: dailyHabit.timestamp,
+        type: dailyHabit.habitId.type, // From Habit model
+        completed: dailyHabit.completed,
+        // For numeric habits
+        count: dailyHabit.count,
+        goal: dailyHabit.goal,
+        subtype: dailyHabit.subtype,
+        // For timer habits
+        currentTime: dailyHabit.currentTime,
+        initialTime: dailyHabit.initialTime,
+        timerInterval: dailyHabit.timerInterval
+      }))
 
-      const dailyHabits = await DailyHabit.find({ _id: { $in: habitIdsArray } })
-      reply.status(200).send(dailyHabits)
+      reply.status(200).send(response)
     } catch (error) {
-      console.error('Error fetching daily habits by IDs:', error)
-      reply.status(500).send({ message: 'Error fetching daily habits by IDs', error: error.message })
+      console.error('Error fetching daily habits by date range:', error)
+      reply.status(500).send({ message: 'Error fetching daily habits by date range', error: error.message })
     }
   })
 }

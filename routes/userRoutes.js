@@ -4,183 +4,106 @@ const Habit = require('../models/Habit')
 const bcrypt = require('bcrypt')
 
 // Importing schemas
-const createUserParams = require('../schemas/createUserParams.json')
-const getUserByIDParams = require('../schemas/getUserByIDParams.json')
-const getUserByUsernameParams = require('../schemas/getUserByUsernameParams.json')
-const updateUserBodySchema = require('../schemas/updateUserBodySchema.json')
+const createUserSchema = require('../data/schemas/user/createUserSchema.json')
+const getUserByIDSchema = require('../data/schemas/user/getUserByIDSchema.json')
+const getUserByUsernameSchema = require('../data/schemas/user/getUserByUsernameSchema.json')
+const updateUserBodySchema = require('../data/schemas/user/updateUserBodySchema.json')
 
 async function userRoutes(fastify, options) {
+  const handleResponse = (reply, success, dataOrMessage) => {
+    const response = { success, ...(!success && { message: dataOrMessage }) }
+    if (success) response.data = dataOrMessage
+    return reply.send(response)
+  }
+
   // Register a new user
-  fastify.post(
-    '/users/register',
-    {
-      schema: {
-        body: createUserParams
-      }
-    },
-    async (request, reply) => {
-      const { name, username, email, password } = request.body
-
-      try {
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const newUser = new User({
-          name,
-          username,
-          email,
-          password: hashedPassword
-        })
-
-        const savedUser = await newUser.save()
-        return reply.status(201).send({ success: true, data: savedUser })
-      } catch (error) {
-        return reply.status(400).send({ success: false, message: error.message })
-      }
+  fastify.post('/users/register', { schema: { body: createUserSchema } }, async (request, reply) => {
+    const { name, username, email, password } = request.body
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const newUser = new User({ name, username, email, password: hashedPassword })
+      const savedUser = await newUser.save()
+      return handleResponse(reply, true, savedUser)
+    } catch (error) {
+      return handleResponse(reply, false, error.message)
     }
-  )
+  })
 
   // Get all users
   fastify.get('/users', async (request, reply) => {
     try {
       const users = await User.find().lean()
-      return reply.send({ success: true, data: users })
+      return handleResponse(reply, true, users)
     } catch (error) {
-      return reply.status(500).send({ success: false, message: error.message })
+      return handleResponse(reply, false, error.message)
     }
   })
 
   // Get a user by MongoDB _id
-  fastify.get(
-    '/users/id/:id',
-    {
-      schema: {
-        params: getUserByIDParams
-      }
-    },
-    async (request, reply) => {
-      try {
-        const user = await User.findById(request.params.id).lean()
-
-        if (!user) {
-          return reply.status(404).send({ success: false, message: 'User not found' })
-        }
-
-        return reply.send({ success: true, data: user })
-      } catch (error) {
-        return reply.status(500).send({ success: false, message: error.message })
-      }
+  fastify.get('/users/id/:id', { schema: { params: getUserByIDSchema } }, async (request, reply) => {
+    try {
+      const user = await User.findById(request.params.id).lean()
+      return user ? handleResponse(reply, true, user) : handleResponse(reply, false, 'User not found')
+    } catch (error) {
+      return handleResponse(reply, false, error.message)
     }
-  )
+  })
 
   // Get a user by username
-  fastify.get(
-    '/users/username/:username',
-    {
-      schema: {
-        params: getUserByUsernameParams
-      }
-    },
-    async (request, reply) => {
-      try {
-        const user = await User.findOne({ username: request.params.username }).lean()
-
-        if (!user) {
-          return reply.status(404).send({ success: false, message: 'User not found' })
-        }
-
-        return reply.send({ success: true, data: user })
-      } catch (error) {
-        return reply.status(500).send({ success: false, message: error.message })
-      }
+  fastify.get('/users/username/:username', { schema: { params: getUserByUsernameSchema } }, async (request, reply) => {
+    try {
+      const user = await User.findOne({ username: request.params.username }).lean()
+      return user ? handleResponse(reply, true, user) : handleResponse(reply, false, 'User not found')
+    } catch (error) {
+      return handleResponse(reply, false, error.message)
     }
-  )
+  })
 
   // Update a user by MongoDB _id
   fastify.put(
     '/users/:id',
-    {
-      schema: {
-        params: getUserByIDParams,
-        body: updateUserBodySchema
-      }
-    },
+    { schema: { params: getUserByIDSchema, body: updateUserBodySchema } },
     async (request, reply) => {
       try {
-        const updatedUser = await User.findByIdAndUpdate(request.params.id, request.body, {
-          new: true,
-          lean: true
-        })
-
-        if (!updatedUser) {
-          return reply.status(404).send({ success: false, message: 'User not found' })
-        }
-
-        return reply.send({ success: true, data: updatedUser })
+        const updatedUser = await User.findByIdAndUpdate(request.params.id, request.body, { new: true, lean: true })
+        return updatedUser ? handleResponse(reply, true, updatedUser) : handleResponse(reply, false, 'User not found')
       } catch (error) {
-        return reply.status(400).send({ success: false, message: error.message })
+        return handleResponse(reply, false, error.message)
       }
     }
   )
 
   // Delete a user by MongoDB _id
-  fastify.delete(
-    '/users/:id',
-    {
-      schema: {
-        params: getUserByIDParams
-      }
-    },
-    async (request, reply) => {
-      try {
-        const userId = request.params.id;
-  
-        // Step 1: Find the user and their habits
-        const user = await User.findById(userId).populate('habits.habitId');
-  
-        if (!user) {
-          return reply.status(404).send({ success: false, message: 'User not found' });
-        }
-  
-        // Step 2: Collect habit IDs to delete
-        const habitIds = user.habits.map(habit => habit.habitId);
-  
-        // Step 3: Delete Daily Habits associated with these habits
-        await DailyHabit.deleteMany({ habitId: { $in: habitIds } });
-  
-        // Step 4: Delete the Habits themselves
-        await Habit.deleteMany({ _id: { $in: habitIds } });
-  
-        // Step 5: Delete the User
-        const deletedUser = await User.findByIdAndDelete(userId);
-  
-        return reply.send({ success: true, message: 'User and associated habits deleted' });
-      } catch (error) {
-        console.error(error);
-        return reply.status(500).send({ success: false, message: error.message });
-      }
+  fastify.delete('/users/:id', { schema: { params: getUserByIDSchema } }, async (request, reply) => {
+    try {
+      const userId = request.params.id
+      const user = await User.findById(userId).populate('habits.habitId')
+      if (!user) return handleResponse(reply, false, 'User not found')
+
+      const habitIds = user.habits.map((habit) => habit.habitId)
+      await DailyHabit.deleteMany({ habitId: { $in: habitIds } })
+      await Habit.deleteMany({ _id: { $in: habitIds } })
+      await User.findByIdAndDelete(userId)
+
+      return handleResponse(reply, true, 'User and associated habits deleted')
+    } catch (error) {
+      return handleResponse(reply, false, error.message)
     }
-  );
-  
+  })
 
   // Login route
   fastify.post('/users/login', async (request, reply) => {
     const { username, password } = request.body
-
     try {
       const user = await User.findOne({ username }).lean()
-
-      if (!user) {
-        return reply.status(404).send({ success: false, message: 'User not found' })
-      }
+      if (!user) return handleResponse(reply, false, 'User not found')
 
       const isPasswordValid = await bcrypt.compare(password, user.password)
-
-      if (!isPasswordValid) {
-        return reply.status(401).send({ success: false, message: 'Invalid credentials' })
-      }
-
-      return reply.send({ success: true, message: 'Login successful', user })
+      return isPasswordValid
+        ? handleResponse(reply, true, { message: 'Login successful', user })
+        : handleResponse(reply, false, 'Invalid credentials')
     } catch (error) {
-      return reply.status(500).send({ success: false, message: error.message })
+      return handleResponse(reply, false, error.message)
     }
   })
 }

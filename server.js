@@ -13,12 +13,10 @@ mongoose.connect(mongoUri)
 // Register your routes here
 const userRoutes = require('./routes/userRoutes')
 const habitRoutes = require('./routes/habitRoutes')
-const dayRoutes = require('./routes/dayRoutes')
 const dailyHabitRoutes = require('./routes/dailyHabitRoutes')
 
 fastify.register(userRoutes)
 fastify.register(habitRoutes)
-fastify.register(dayRoutes)
 fastify.register(dailyHabitRoutes)
 
 // Run the server
