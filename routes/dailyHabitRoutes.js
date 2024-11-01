@@ -111,6 +111,7 @@ async function dailyHabitsRoutes(fastify, options) {
         habitId: dailyHabit.habitId._id,
         timestamp: dailyHabit.timestamp,
         type: dailyHabit.habitId.type, // From Habit model
+        title: dailyHabit.habitId.title,
         completed: dailyHabit.completed,
         // For numeric habits
         count: dailyHabit.count,
