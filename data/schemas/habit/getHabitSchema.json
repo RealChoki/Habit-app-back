@@ -3,5 +3,5 @@
   "properties": {
     "id": { "type": "string", "minLength": 8 }
   },
-  "required": ["id"]
+  "required": ["habitId"]
 }

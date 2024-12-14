@@ -1,5 +1,6 @@
 const Habit = require('../models/Habit');
 const User = require('../models/User');
+const { createDailyHabits } = require('../service/habitService');
 
 // Importing schemas
 const createHabitSchema = require('../data/schemas/habit/createHabitSchema.json');
@@ -7,10 +8,9 @@ const getHabitSchema = require('../data/schemas/habit/getHabitSchema.json');
 const userIdParamSchema = require('../data/schemas/user/userIdParamSchema.json');
 
 async function habitRoutes(fastify, options) {
+
   // Helper function for error handling
   const handleError = (reply, error, statusCode = 400) => reply.status(statusCode).send({ message: error.message });
-
-  // Create a new habit for a user
   fastify.post(
     '/users/:userId/habits',
     {
@@ -19,7 +19,10 @@ async function habitRoutes(fastify, options) {
         body: createHabitSchema
       }
     },
+
     async (request, reply) => {
+      console.log(`Received request for userId: ${request.params.userId}`);
+      console.log("Received body:", request.body);
       const { userId } = request.params;
 
       try {
@@ -31,7 +34,8 @@ async function habitRoutes(fastify, options) {
 
         user.habits.push(savedHabit._id);
         await user.save();
-
+        await createDailyHabits(savedHabit, userId);
+        
         return reply.status(201).send(savedHabit);
       } catch (error) {
         handleError(reply, error);
@@ -45,6 +49,26 @@ async function habitRoutes(fastify, options) {
       const habits = await Habit.find();
       return reply.send(habits);
     } catch (error) {
+      handleError(reply, error, 500);
+    }
+  });
+
+  // Get all habits by user ID
+  fastify.get('/habits/user/:userId', async (request, reply) => {
+    try {
+      // Find the user by userId
+      const user = await User.findById(request.params.userId);
+      
+      if (!user) {
+        return reply.status(404).send({ message: 'User not found' });
+      }
+      
+      // Now, fetch all habits based on the habit IDs stored in the user's `habits` array
+      const habits = await Habit.find({ _id: { $in: user.habits } });
+  
+      return reply.send(habits);  // Send the array of habit documents
+    } catch (error) {
+      console.error('Error fetching habits:', error);
       handleError(reply, error, 500);
     }
   });
