@@ -1,29 +1,41 @@
 const DailyHabit = require('../models/DailyHabit');
 
 const createDailyHabits = async (habit, userId) => {
-  const { startDate, frequency, _id: habitId } = habit;
-  console.log("createDailyHabits", startDate, frequency, habitId, userId);  // Log to inspect input
+    const { startDate, frequency, _id: habitId, goal, count, subtype, currentTime, initialTime } = habit;
+    console.log("createDailyHabits", startDate, frequency, habitId, userId, goal, count, subtype, currentTime, initialTime);
 
-  // Step 1: Check the frequency and create daily habits if frequency is 'daily'
-  if (frequency === 'daily') {
-    let currentDate = new Date(startDate);
-    const daysToCreate = 30;  // Example: Create habits for the next 30 days
+    if (frequency === 'daily') {
+        let currentDate = new Date(startDate);
+        const daysToCreate = 30;  // Example: Create habits for the next 30 days
 
-    for (let i = 0; i < daysToCreate; i++) {
-      // Step 2: Create the DailyHabit document
-      const dailyHabit = new DailyHabit({
-        userId: userId,  // Directly using userId passed from params
-        habitId: habitId,
-        timestamp: new Date(currentDate),  // Timestamp for each day's habit
-        completed: null  // Initially set to null, can be updated later
-      });
+        for (let i = 0; i < daysToCreate; i++) {
+            const dailyHabitData = {
+                userId: userId,
+                habitId: habitId,
+                timestamp: new Date(currentDate),
+                completed: null,
+            };
 
-      await dailyHabit.save();  // Save the daily habit to the database
-      currentDate.setDate(currentDate.getDate() + 1);  // Move to the next day
+            // Include numeric habit fields if it's a numeric habit
+            if (habit.type === 'numeric') {
+                dailyHabitData.count = 0;
+                dailyHabitData.goal = goal;
+                dailyHabitData.subtype = subtype;
+            }
+
+            // Include timer habit fields if it's a timer habit
+            if (habit.type === 'timer') {
+                dailyHabitData.currentTime = currentTime;
+                dailyHabitData.initialTime = initialTime;
+            }
+
+            const dailyHabit = new DailyHabit(dailyHabitData);
+            await dailyHabit.save();
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+    } else {
+        console.log("// Future logic for other frequencies");
     }
-  } else {
-    console.log("// Future logic for other frequencies");
-  }
 };
 
 module.exports = { createDailyHabits };

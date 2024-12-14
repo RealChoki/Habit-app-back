@@ -11,20 +11,17 @@ const HabitSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(value) {
-        // Validate daily frequency as a string
         if (value === 'daily') return true;
 
-        // Validate weekly frequency as an object with "week" array
         if (value && value.week && Array.isArray(value.week)) {
           return value.week.every(day => ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].includes(day));
         }
 
-        // Validate monthly frequency as an object with "month" array
         if (value && value.month && Array.isArray(value.month)) {
           return value.month.every(day => Number.isInteger(day) && day >= 1 && day <= 31);
         }
 
-        return false;  // If none of the conditions match
+        return false;
       },
       message: 'Invalid frequency format'
     }
@@ -47,6 +44,24 @@ const HabitSchema = new mongoose.Schema({
   completed: {
     type: Boolean,
     default: null
+  },
+  // For numeric habits:
+  count: {
+    type: Number
+  },
+  goal: {
+    type: Number
+  },
+  subtype: {
+    type: String,
+    enum: ['increment', 'decrement']
+  },
+  // For timer habits:
+  currentTime: {
+    type: Number
+  },
+  initialTime: {
+    type: Number
   }
 });
 
