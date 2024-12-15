@@ -1,6 +1,6 @@
 const Habit = require('../models/Habit');
 const User = require('../models/User');
-const { createDailyHabits } = require('../service/habitService');
+const { createDailyHabits, deleteDailyHabits } = require('../service/habitService');
 
 // Importing schemas
 const createHabitSchema = require('../data/schemas/habit/createHabitSchema.json');
@@ -114,6 +114,7 @@ async function habitRoutes(fastify, options) {
     async (request, reply) => {
       try {
         await Habit.findByIdAndDelete(request.params.habitId);
+        await deleteDailyHabits(request.params.habitId);
         return reply.send({ message: 'Habit deleted' });
       } catch (error) {
         handleError(reply, error, 500);

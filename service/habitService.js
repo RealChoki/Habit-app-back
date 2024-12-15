@@ -25,7 +25,7 @@ const createDailyHabits = async (habit, userId) => {
 
             // Include timer habit fields if it's a timer habit
             if (habit.type === 'timer') {
-                dailyHabitData.currentTime = currentTime;
+                dailyHabitData.currentTime = initialTime;
                 dailyHabitData.initialTime = initialTime;
             }
 
@@ -38,4 +38,21 @@ const createDailyHabits = async (habit, userId) => {
     }
 };
 
-module.exports = { createDailyHabits };
+const deleteDailyHabits = async (habitId) => {
+    try {
+        const result = await DailyHabit.deleteMany({ habitId: habitId });
+
+        if (result.deletedCount > 0) {
+            console.log(`Successfully deleted ${result.deletedCount} daily habits for habitId: ${habitId}`);
+        } else {
+            console.log(`No daily habits found for habitId: ${habitId} and userId: ${userId}`);
+        }
+
+        return result;
+    } catch (error) {
+        console.error('Error deleting daily habits:', error);
+        throw new Error('Error deleting daily habits');
+    }
+};
+
+module.exports = { createDailyHabits, deleteDailyHabits };
