@@ -6,20 +6,21 @@ const { createDailyHabits, deleteDailyHabits } = require('../service/habitServic
 const createHabitSchema = require('../data/schemas/habit/createHabitSchema.json');
 const getHabitSchema = require('../data/schemas/habit/getHabitSchema.json');
 const userIdParamSchema = require('../data/schemas/user/userIdParamSchema.json');
-
 async function habitRoutes(fastify, options) {
 
   // Helper function for error handling
   const handleError = (reply, error, statusCode = 400) => reply.status(statusCode).send({ message: error.message });
+
+  // POST /users/:userId/habits - Create a new habit (protected)
   fastify.post(
     '/users/:userId/habits',
     {
       schema: {
         params: userIdParamSchema,
         body: createHabitSchema
-      }
+      },
+      preHandler: fastify.authenticate // Protect this route
     },
-
     async (request, reply) => {
       console.log(`Received request for userId: ${request.params.userId}`);
       console.log("Received body:", request.body);
@@ -43,8 +44,8 @@ async function habitRoutes(fastify, options) {
     }
   );
 
-  // Get all habits
-  fastify.get('/habits', async (request, reply) => {
+  // GET /habits - Get all habits (protected)
+  fastify.get('/habits', { preHandler: fastify.authenticate }, async (request, reply) => {
     try {
       const habits = await Habit.find();
       return reply.send(habits);
@@ -53,8 +54,8 @@ async function habitRoutes(fastify, options) {
     }
   });
 
-  // Get all habits by user ID
-  fastify.get('/habits/user/:userId', async (request, reply) => {
+  // GET /habits/user/:userId - Get all habits by user ID (protected)
+  fastify.get('/habits/user/:userId', { preHandler: fastify.authenticate }, async (request, reply) => {
     try {
       // Find the user by userId
       const user = await User.findById(request.params.userId);
@@ -73,8 +74,8 @@ async function habitRoutes(fastify, options) {
     }
   });
 
-  // Get a habit by ID
-  fastify.get('/habits/:habitId', async (request, reply) => {
+  // GET /habits/:habitId - Get a habit by ID (protected)
+  fastify.get('/habits/:habitId', { preHandler: fastify.authenticate }, async (request, reply) => {
     try {
       const habit = await Habit.findById(request.params.habitId);
       if (!habit) return reply.status(404).send({ message: 'Habit not found' });
@@ -84,14 +85,15 @@ async function habitRoutes(fastify, options) {
     }
   });
 
-  // Update a habit
+  // PUT /habits/:habitId - Update a habit (protected)
   fastify.put(
     '/habits/:habitId',
     {
       schema: {
         params: getHabitSchema,
         body: createHabitSchema
-      }
+      },
+      preHandler: fastify.authenticate // Protect this route
     },
     async (request, reply) => {
       try {
@@ -103,13 +105,14 @@ async function habitRoutes(fastify, options) {
     }
   );
 
-  // Delete a habit
+  // DELETE /habits/:habitId - Delete a habit (protected)
   fastify.delete(
     '/habits/:habitId',
     {
       schema: {
         params: getHabitSchema
-      }
+      },
+      preHandler: fastify.authenticate // Protect this route
     },
     async (request, reply) => {
       try {

@@ -99,9 +99,10 @@ async function userRoutes(fastify, options) {
       if (!user) return handleResponse(reply, false, 'User not found')
 
       const isPasswordValid = await bcrypt.compare(password, user.password)
-      return isPasswordValid
-        ? handleResponse(reply, true, { message: 'Login successful', user })
-        : handleResponse(reply, false, 'Invalid credentials')
+      if (!isPasswordValid) return handleResponse(reply, false, 'Invalid credentials')
+
+      const token = fastify.jwt.sign({ id: user._id, username: user.username }, { expiresIn: '1h' })
+      return handleResponse(reply, true, { message: 'Login successful', token, user })
     } catch (error) {
       return handleResponse(reply, false, error.message)
     }
